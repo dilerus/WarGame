@@ -1,0 +1,6 @@
+C:\Users\lmilerx\Desktop\C#\zaliczenie\WarGame\WarGame\WarGame\bin\Release\WarGame.exe.config
+C:\Users\lmilerx\Desktop\C#\zaliczenie\WarGame\WarGame\WarGame\bin\Release\WarGame.exe
+C:\Users\lmilerx\Desktop\C#\zaliczenie\WarGame\WarGame\WarGame\bin\Release\WarGame.pdb
+C:\Users\lmilerx\Desktop\C#\zaliczenie\WarGame\WarGame\WarGame\obj\Release\WarGame.exe
+C:\Users\lmilerx\Desktop\C#\zaliczenie\WarGame\WarGame\WarGame\obj\Release\WarGame.pdb
+C:\Users\lmilerx\Desktop\C#\zaliczenie\WarGame\WarGame\WarGame\obj\Release\WarGame.csprojResolveAssemblyReference.cache
