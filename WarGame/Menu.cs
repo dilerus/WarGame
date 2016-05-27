@@ -8,7 +8,7 @@ namespace WarGame
 {
     class Menu
     {
-        public static void Menu_display()
+        public static void Menu_display()   //Displaying Menu
         {
             Console.Clear();
             Console.BackgroundColor= ConsoleColor.Red;
@@ -23,7 +23,7 @@ namespace WarGame
             Console.WriteLine("2: Play many Games");
             Console.WriteLine("0: Exit\n");
         }
-        public static void kont()
+        public static void kont()  //Pree any key to continue
         {
             Console.WriteLine("\n\nPress any key to continue");
             Console.ReadKey();

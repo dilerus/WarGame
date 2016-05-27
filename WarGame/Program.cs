@@ -12,7 +12,7 @@ namespace WarGame
         {
             loop();
         }
-        public static void loop() //main loop to steer menu
+        private static void loop() //main loop to steer menu
         {
             int select = 0;
 
@@ -95,7 +95,7 @@ namespace WarGame
             }
             while (select != 0);
         }
-        public static class variables  //Some Variables used in other methods
+        private static class variables  //Some Variables used in other methods
         {
             public static int num = 0;
             public static int iter = 0;
@@ -105,9 +105,7 @@ namespace WarGame
             public enum Winner
             { Computer=1, Player=2};
         }
-
-
-        public static void war()       //Single War method
+        private static void war()       //Single War method
         {
             Random rand = new Random();
 
@@ -585,15 +583,15 @@ namespace WarGame
             variables.ScoreTab[variables.iter, 3] = SCwins;
             variables.ScoreTab[variables.iter, 4] = SDraws;
     }       
-        public static string ChangeType(int x)    //Polimorphism
+        private static string ChangeType(int x)    //Polimorphism
         {
             return x.ToString();
         }
-        public static string ChangeType(double x) //Polimorphism
+        private static string ChangeType(double x) //Polimorphism
         {
             return x.ToString();
         }
-        public static int ChangeType(string x)    //Polimorphism
+        private static int ChangeType(string x)    //Polimorphism
         {
             return int.Parse(x);
         }
