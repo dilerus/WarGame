@@ -15,18 +15,15 @@ namespace WarGame
         private static void loop() //main loop to steer menu
         {
             int select = 0;
-
             do
             { // Main loop
                 Menu.Menu_display();  //Menu display
-
                 try
                 {
                     select = ChangeType(Console.ReadLine());
                 }
                 catch
                 {
-                    Console.WriteLine("Please select number!");
                     select = 9;
                 } // checks if provided variable is number
 
@@ -40,19 +37,23 @@ namespace WarGame
 
                     case 2:
                         variables.num = 0;
-                        Console.WriteLine("How many games do you want to simulate?");
-
+                        Console.WriteLine("How many games do you want to simulate? (1-100)");
                         try
                         {
                             variables.num = ChangeType(Console.ReadLine());
                         }
                         catch
                         {
-                            Console.WriteLine("Please give number");
-                            select = 9;
+                            Console.WriteLine("Please give number.");
+                            Console.ReadKey();
                             break;
                         }
-
+                        if (variables.num < 1 || variables.num > 100)
+                        {
+                            Console.WriteLine("Please give number from 1 to 100.");
+                            Console.ReadKey();
+                            break;
+                        }
                         variables.Pwins = 0;
                         variables.Cwins = 0;
                         for (variables.iter = 0; variables.iter < variables.num; variables.iter++)
@@ -60,7 +61,6 @@ namespace WarGame
                             war();
                         }
                         variables.iter = 0;
-
                         Console.Clear();
                         Console.WriteLine("Played hands  |  Winner        |  Hands won by Player  |  Hands won by Computer  |  Draws\n------------------------------------------------------------------------------------------");
                         for (int i = 0; i < variables.num; i++)
@@ -70,21 +70,26 @@ namespace WarGame
                             Console.WriteLine(variables.ScoreTab[i, 0] + "              " + variables.ScoreTab[i, 1] + "         " + variables.ScoreTab[i, 2] + "                     " + variables.ScoreTab[i, 3] + "                       " + variables.ScoreTab[i, 4]);
                             Console.ResetColor();
                         }
-
-                        Console.WriteLine("\nSTATISTICS:");
-                        Console.WriteLine("Player wins: " + variables.Pwins + ", Computer wins: " + variables.Cwins);
+                        Console.WriteLine("\nSTATISTICS:\nPlayer wins: " + variables.Pwins + ", Computer wins: " + variables.Cwins);
                         Menu.kont();
                         Console.Clear();
+                        break;
+
+                    case 3:
+                        string Deb;
+                        Console.WriteLine("Debug mode is a special mode which gives you detailed information about state of the game.\n");
+                        if (variables.Debug == false) Console.WriteLine("Debug mode is [OFF]. Do you want to change it?\nPress 'y' to change Debug Mode to [ON]");
+                        else Console.WriteLine("Debug mode is [ON]. Do you want to change it?\nPress 'y' to change Debug Mode to [OFF]");
+                        Deb = Console.ReadLine();
+                        if (Deb == "y") if (variables.Debug == false) variables.Debug = true; else variables.Debug = false;
                         break;
 
                     case 0:
                         break;
 
                     case 9: //error handling
-                        Console.WriteLine("");
-                        Console.WriteLine("Error while processing option");
+                        Console.WriteLine("\nERROR! Please select number!");
                         Menu.kont();
-                        Console.ReadKey();
                         break;
 
                     default:
@@ -95,21 +100,20 @@ namespace WarGame
             }
             while (select != 0);
         }
-        private static class variables  //Some Variables used in other methods
+        public static class variables  //some variables used in other methods
         {
             public static int num = 0;
             public static int iter = 0;
-            public static string[,] ScoreTab = new string[100,5];
+            public static string[,] ScoreTab = new string[100, 5];
             public static int Pwins = 0;
             public static int Cwins = 0;
             public enum Winner
-            { Computer=1, Player=2};
+            { Computer = 1, Player = 2 };
+            public static bool Debug = false;
         }
         private static void war()       //Single War method
         {
             Random rand = new Random();
-
-            bool Debug = false;
 
             List<Card> PlayerCards = new List<Card>();
             List<Card> ComputerCards = new List<Card>();
@@ -376,40 +380,22 @@ namespace WarGame
             SA.Code = "SA";
             SA.AddToDeck(Deck, SA);
 
-
             Random ran = new Random();
             int SteringVar = Deck.Count;
             for (int i = 0; i < SteringVar; i++)
             {
                 int g = ran.Next(Deck.Count);
-                if (PlayerCards.Count < ComputerCards.Count)
-                {
-                    PlayerCards.Add(Deck[g]);
-                }
-                else
-                {
-                    ComputerCards.Add(Deck[g]);
-                }
+                if (PlayerCards.Count < ComputerCards.Count) PlayerCards.Add(Deck[g]);
+                else ComputerCards.Add(Deck[g]);
                 Deck.Remove(Deck[g]);
             }
-
             string OutPC = "";
             string OutCC = "";
             string OutDD = "";
-
-            foreach (Card PC in PlayerCards)
-            {
-                OutPC = OutPC + " " + PC.Code;
-            }
-
-            foreach (Card CC in ComputerCards)
-            {
-                OutCC = OutCC + " " + CC.Code;
-            }
-
+            foreach (Card PC in PlayerCards) OutPC = OutPC + " " + PC.Code;
+            foreach (Card CC in ComputerCards) OutCC = OutCC + " " + CC.Code;
             Console.WriteLine("INITIAL CARD SETUP\nPlayer Cards: " + OutPC + "\nComputer Cards: " + OutCC + "\nOverall number of Player Cards: " + PlayerCards.Count + "\nOverall number of Computer Cards: " + ComputerCards.Count + "\n\n[Press Any Key]");
             if (variables.num == 0) Console.ReadKey();
-
             int Hands = 0;
             double Pwins = 0;
             double Cwins = 0;
@@ -420,7 +406,6 @@ namespace WarGame
             int DrawCCrand = 0;
             int DrawPCrand = 0;
             int DrawCount;
-
             while ((PlayerCards.Count > 0) && (ComputerCards.Count > 0))
             {
                 if (PlayerCards.Count == 0) break;
@@ -429,14 +414,14 @@ namespace WarGame
 
                 if (DrawNumber > 0)
                 {
-                    if (Debug == true) Console.WriteLine("DrawNumber = " + DrawNumber);
+                    if (variables.Debug == true) Console.WriteLine("DrawNumber = " + DrawNumber);
                     DrawCCrand = rand.Next(ComputerCards.Count);
                     DrawPCrand = rand.Next(PlayerCards.Count);
-                    if (Debug == true) Console.WriteLine("Because of Draw, Player is risking " + PlayerCards[DrawPCrand].Code + " card and Computer is risking " + ComputerCards[DrawCCrand].Code);
+                    if (variables.Debug == true) Console.WriteLine("Because of Draw, Player is risking " + PlayerCards[DrawPCrand].Code + " card and Computer is risking " + ComputerCards[DrawCCrand].Code);
                     DrawDeck.Add(ComputerCards[DrawCCrand]);
-                    if (Debug == true) Console.WriteLine("Adding " + ComputerCards[DrawCCrand].Code + " to DrawDeck");
+                    if (variables.Debug == true) Console.WriteLine("Adding " + ComputerCards[DrawCCrand].Code + " to DrawDeck");
                     DrawDeck.Add(PlayerCards[DrawPCrand]);
-                    if (Debug == true) Console.WriteLine("Adding " + PlayerCards[DrawPCrand].Code + " to DrawDeck");
+                    if (variables.Debug == true) Console.WriteLine("Adding " + PlayerCards[DrawPCrand].Code + " to DrawDeck");
                     ComputerCards.Remove(ComputerCards[DrawCCrand]);
                     PlayerCards.Remove(PlayerCards[DrawPCrand]);
                 }
@@ -459,12 +444,12 @@ namespace WarGame
                         DrawCount = DrawDeck.Count;
                         for (int i = 0; i < DrawCount; i++)
                         {
-                            if (Debug == true) Console.WriteLine("Adding do PlayerCards: " + DrawDeck[i].Code);
+                            if (variables.Debug == true) Console.WriteLine("Adding do PlayerCards: " + DrawDeck[i].Code);
                             PlayerCards.Add(DrawDeck[i]);
                         }
                         for (int i = DrawCount - 1; i >= 0; i--)
                         {
-                            if (Debug == true) Console.WriteLine("Removing from DrawDeck: " + DrawDeck[i].Code);
+                            if (variables.Debug == true) Console.WriteLine("Removing from DrawDeck: " + DrawDeck[i].Code);
                             DrawDeck.Remove(DrawDeck[i]);
                         }
                         DrawNumber = 0;
@@ -476,8 +461,8 @@ namespace WarGame
                     Console.ForegroundColor = ConsoleColor.Blue;
                     Console.WriteLine("Player Card: " + PlayerCards[PCrand].Code + "(value " + PlayerCards[PCrand].Value + ") drawed with Computer Card: " + ComputerCards[CCrand].Code + "(value " + ComputerCards[CCrand].Value + ")");
                     Console.ResetColor();
-                    if (Debug == true) Console.WriteLine("Adding do DrawDeck: " + PlayerCards[PCrand].Code);
-                    if (Debug == true) Console.WriteLine("Adding do DrawDeck: " + ComputerCards[CCrand].Code);
+                    if (variables.Debug == true) Console.WriteLine("Adding do DrawDeck: " + PlayerCards[PCrand].Code);
+                    if (variables.Debug == true) Console.WriteLine("Adding do DrawDeck: " + ComputerCards[CCrand].Code);
                     DrawDeck.Add(PlayerCards[PCrand]);
                     DrawDeck.Add(ComputerCards[CCrand]);
                     PlayerCards.Remove(PlayerCards[PCrand]);
@@ -497,12 +482,12 @@ namespace WarGame
                         DrawCount = DrawDeck.Count;
                         for (int i = 0; i < DrawCount; i++)
                         {
-                            if (Debug == true) Console.WriteLine("Adding do ComputerCards: " + DrawDeck[i].Code);
+                            if (variables.Debug == true) Console.WriteLine("Adding do ComputerCards: " + DrawDeck[i].Code);
                             ComputerCards.Add(DrawDeck[i]);
                         }
                         for (int i = DrawCount - 1; i >= 0; i--)
                         {
-                            if (Debug == true) Console.WriteLine("Removing from DrawDeck: " + DrawDeck[i].Code);
+                            if (variables.Debug == true) Console.WriteLine("Removing from DrawDeck: " + DrawDeck[i].Code);
                             DrawDeck.Remove(DrawDeck[i]);
                         }
                         DrawNumber = 0;
@@ -514,36 +499,17 @@ namespace WarGame
                 OutPC = "";
                 OutCC = "";
                 OutDD = "";
-                foreach (Card PC in PlayerCards)
-                {
-                    OutPC = OutPC + " " + PC.Code;
-                }
-
-                foreach (Card CC in ComputerCards)
-                {
-                    OutCC = OutCC + " " + CC.Code;
-                }
-
-                foreach (Card DD in DrawDeck)
-                {
-                    OutDD = OutDD + " " + DD.Code;
-                }
-                if (Debug == true) Console.WriteLine("Player Cards: " + OutPC + ", TOTAL: " + PlayerCards.Count + "\nComputer Cards: " + OutCC + ", TOTAL: " + ComputerCards.Count + "\nDraw Deck: " + OutDD + ", Total: " + DrawDeck.Count + "\n\n");
+                foreach (Card PC in PlayerCards) OutPC = OutPC + " " + PC.Code;
+                foreach (Card CC in ComputerCards) OutCC = OutCC + " " + CC.Code;
+                foreach (Card DD in DrawDeck) OutDD = OutDD + " " + DD.Code;
+                if (variables.Debug == true) Console.WriteLine("Player Cards: " + OutPC + ", TOTAL: " + PlayerCards.Count + "\nComputer Cards: " + OutCC + ", TOTAL: " + ComputerCards.Count + "\nDraw Deck: " + OutDD + ", Total: " + DrawDeck.Count + "\n\n");
             }
 
             OutPC = "";
             OutCC = "";
             OutDD = "";
-            foreach (Card PC in PlayerCards)
-            {
-                OutPC = OutPC + " " + PC.Code;
-            }
-
-            foreach (Card CC in ComputerCards)
-            {
-                OutCC = OutCC + " " + CC.Code;
-            }
-
+            foreach (Card PC in PlayerCards) OutPC = OutPC + " " + PC.Code;
+            foreach (Card CC in ComputerCards) OutCC = OutCC + " " + CC.Code;
             string Winner = "";
             Console.WriteLine("\n");
             int Win = 0;
@@ -570,7 +536,7 @@ namespace WarGame
 
             Console.WriteLine("WINNER: " + Winner);
             Console.ResetColor();
-            if (Debug == true) Console.WriteLine("\nPlayer Cards: " + OutPC + ", TOTAL: " + PlayerCards.Count + "\nComputer Cards: " + OutCC + ", TOTAL: " + ComputerCards.Count + "\nDraw Deck: " + DrawDeck.Count);
+            if (variables.Debug == true) Console.WriteLine("\nPlayer Cards: " + OutPC + ", TOTAL: " + PlayerCards.Count + "\nComputer Cards: " + OutCC + ", TOTAL: " + ComputerCards.Count + "\nDraw Deck: " + DrawDeck.Count);
             Console.WriteLine("\nSTATISTICS: \nNumber of hands played: " + Hands + "\nHands Won by Player: " + Pwins + ", Player Win rate: " + Math.Round(PwinRate, 2) + "%\nHands Won by Computer: " + Cwins + ", Computer Win rate: " + Math.Round(CwinRate, 2) + "%,\nDraws: " + Draws + ", Draw rate: " + Math.Round(DrawRate, 2) + "%");
             string SHands = ChangeType(Hands);
             string SPwins = ChangeType(Pwins);
@@ -582,7 +548,7 @@ namespace WarGame
             variables.ScoreTab[variables.iter, 2] = SPwins;
             variables.ScoreTab[variables.iter, 3] = SCwins;
             variables.ScoreTab[variables.iter, 4] = SDraws;
-    }       
+        }
         private static string ChangeType(int x)    //Polimorphism
         {
             return x.ToString();
