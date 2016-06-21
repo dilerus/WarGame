@@ -1,0 +1,1 @@
+WarGame jest symulacj¹ gry karcianej w Wojnê. S¹ dwaj gracze, Player i Computer którzy rozgrywaj¹ 1 lub wiêcej partii i wyœwietlane s¹ wyniki, kto wygra³, ile razy, ile rozegrano r¹k itd. Jest opcja w³¹czenia trybu debugowego, wtedy wyœwietlane s¹ wieksze ilosci danych z ka¿dej rozgrywki, stany talii w danym momencie itd.
