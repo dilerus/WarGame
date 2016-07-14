@@ -21,6 +21,5 @@ namespace WarGame
     }
     public class Card : Card_template
     {
-
     }
 }
